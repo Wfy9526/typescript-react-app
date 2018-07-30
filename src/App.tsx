@@ -1,24 +1,24 @@
 import * as React from 'react';
+import { Tabs, Icon } from 'antd';
 import './App.css';
 
-import logo from './logo.svg';
-import Hello from './Hello';
+const TabPane = Tabs.TabPane;
 
 class App extends React.Component {
-  public render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-          <Hello name={'hello world'} />
-      </div>
-    );
-  }
+    public render() {
+        return (
+            <div className="App">
+                <Tabs defaultActiveKey="2">
+                    <TabPane tab={<span><Icon type="meh-o" />电费</span>} key="1">
+                        Tab 1
+                    </TabPane>
+                    <TabPane tab={<span><Icon type="tool" />水费</span>} key="2">
+                        Tab 2
+                    </TabPane>
+                </Tabs>,
+            </div>
+        );
+    }
 }
 
 export default App;
