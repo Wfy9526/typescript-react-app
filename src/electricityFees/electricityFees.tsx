@@ -6,7 +6,7 @@ const RangePicker = DatePicker.RangePicker;
 
 
 interface Iprops {
-    name?: string
+    rooms: object[]
 }
 
 interface Istate {
@@ -21,9 +21,24 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
 
     constructor(props: any) {
         super(props);
+        this.calcAccount = this.calcAccount.bind(this);
     }
 
+    public calcAccount: (e: any) => void = (e: any) => {
+        e.preventDefault();
+        const self = this;
+        this.props.rooms.forEach((_:object, i:number) => {
+            self[`refs${i}`].current.test();
+        });
+    };
+
+
     public render() {
+        const key: string = 'name';
+        this.props.rooms.forEach((_:object, i:number) => {
+            this[`refs${i}`] = React.createRef();
+        });
+
         return (
 
             <React.Fragment>
@@ -42,7 +57,6 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                         </div>
                     </Col>
                 </Row>
-
                 <Row gutter={24}>
                     <Col className="gutter-row" span={6}>
                         <Button>添加一户:</Button>
@@ -59,15 +73,17 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                         </div>
                     </Col>
                 </Row>
-
-                <Row  gutter={24} style={{marginTop: '20px', borderTop: '1px solid gray'}}>
+                <Row gutter={24} style={{marginTop: '20px', borderTop: '1px solid gray'}} type="flex" justify="space-around">
                     {
-                        <Col className="gutter-row" span={6}>
-                            <ElectricityTemp name={'12'} />
-                        </Col>
+                        this.props.rooms.map((_: object, i: number) => {
+                            return (
+                                <Col className="gutter-row" span={Math.ceil(24 / this.props.rooms.length)} key={i}>
+                                    <ElectricityTemp name={_[key]} ref={this[`refs${i}`]}/>
+                                </Col>
+                            )
+                        })
                     }
                 </Row>
-
                 <Row gutter={24} style={{margin: '15px 0px'}}>
                     <Col className="gutter-row" span={6}>
                        每户平摊费用:
@@ -86,6 +102,11 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                         <div className="gutter-box">
                             ..
                         </div>
+                    </Col>
+                </Row>
+                <Row gutter={24}>
+                    <Col className="gutter-row" span={24}>
+                        <Button onClick={this.calcAccount}>结算</Button>
                     </Col>
                 </Row>
             </React.Fragment>

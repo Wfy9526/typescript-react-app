@@ -12,7 +12,7 @@ interface Istate {
     rooms: object[]
 }
 
-class App extends React.Component {
+class App extends React.Component<any, Istate> {
     public state: Istate = {
       rooms: []
     };
@@ -21,9 +21,9 @@ class App extends React.Component {
         this.getFileData();
     }
 
-    public getFileData = () =>{
-        getDataByAjax("../public/data/json").then((data: object) => {
-            const key = "room";
+    public getFileData: () => void = () =>{
+        getDataByAjax("./data.json").then((data: object) => {
+            const key: string = "room";
             this.setState({rooms: data[key]})
         });
     };
@@ -34,7 +34,7 @@ class App extends React.Component {
                 <div className="App">
                     <Tabs defaultActiveKey="1">
                         <TabPane tab={<span><Icon type="meh-o" />电费</span>} key="1">
-                            <ElectricityFees/>
+                            <ElectricityFees rooms={this.state.rooms}/>
                         </TabPane>
                         <TabPane tab={<span><Icon type="tool" />水费</span>} key="2">
                             Tab 2
