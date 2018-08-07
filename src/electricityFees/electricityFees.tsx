@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Row, Col, Input, Button, DatePicker} from 'antd';
+import {Row, Col, Input, Button, DatePicker, message} from 'antd';
 import ElectricityTemp from '../temp/TempElectricity'
 
 const RangePicker = DatePicker.RangePicker;
@@ -18,19 +18,30 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
     public state: Istate = {
         allMoeny: 256,
     };
-
+    private errorNumber: number = 0;
     constructor(props: any) {
         super(props);
         this.calcAccount = this.calcAccount.bind(this);
+        this.errorCheck = this.errorCheck.bind(this);
     }
 
     public calcAccount: (e: any) => void = (e: any) => {
         e.preventDefault();
         const self = this;
+        this.errorNumber = 0;
         this.props.rooms.forEach((_:object, i:number) => {
-            self[`refs${i}`].current.test();
+            self[`refs${i}`].current.check();
         });
+
+        if(this.errorNumber > 0){
+            message.error('请补全信息');
+            return;
+        }
     };
+
+    public errorCheck(): void{
+        this.errorNumber = this.errorNumber + 1;
+    }
 
 
     public render() {
@@ -78,7 +89,7 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                         this.props.rooms.map((_: object, i: number) => {
                             return (
                                 <Col className="gutter-row" span={Math.ceil(24 / this.props.rooms.length)} key={i}>
-                                    <ElectricityTemp name={_[key]} ref={this[`refs${i}`]}/>
+                                    <ElectricityTemp name={_[key]} ref={this[`refs${i}`]} errorCheck={this.errorCheck}/>
                                 </Col>
                             )
                         })

@@ -6,13 +6,15 @@ const RangePicker = DatePicker.RangePicker;
 
 interface Iprops {
     name: string,
+    errorCheck: () => void,
 }
 
 interface Igather {
     last: number,
     current: number,
     days: number,
-    airConditionerMoney: number
+    airConditionerMoney: number,
+    name: string
 }
 
 class ElectricityTemp extends React.Component<Iprops, any> {
@@ -21,19 +23,30 @@ class ElectricityTemp extends React.Component<Iprops, any> {
         current: 0,
         days: 0,
         last: 0,
+        name: this.props.name
     }
+
     constructor(props: any) {
         super(props);
+        this.dateChange = this.dateChange.bind(this);
     }
 
     public getVal (name: string, e:any): void{
         this.gather[name] = Number(e.target.value);
     }
 
-    public test() {
-        alert(this.props.name);
+    public check() {
+        const valueArr: number[] = (Object as any).values(this.gather);
+        if(valueArr.includes(0)){
+            this.props.errorCheck();
+        }
+
     }
 
+    public dateChange(a: any[], timeArr: string[]){
+        const times: number = new Date(timeArr[1]).getTime() - new Date(timeArr[0]).getTime();
+        this.gather.days = Math.ceil(times / (24 * 60 * 60 * 1000));
+    }
 
 
     public render() {
@@ -68,7 +81,7 @@ class ElectricityTemp extends React.Component<Iprops, any> {
                 </Col>
                 <Col className="gutter-row" span={16}>
                     <div className="gutter-box">
-                        <RangePicker/>
+                        <RangePicker onChange={this.dateChange}/>
                     </div>
                 </Col>
                 <Col className="gutter-row" span={8}>
