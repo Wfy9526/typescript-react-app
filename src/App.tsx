@@ -28,7 +28,6 @@ class App extends React.Component<any, Istate> {
         });
     };
 
-
     public render() {
         return (
                 <div className="App">

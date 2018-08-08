@@ -10,7 +10,7 @@ interface Iprops {
 }
 
 interface Istate {
-    allMoeny: number,
+    allMoeny: number
 }
 
 class ElectricityFees extends React.Component<Iprops, Istate> {
@@ -23,6 +23,7 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
         super(props);
         this.calcAccount = this.calcAccount.bind(this);
         this.errorCheck = this.errorCheck.bind(this);
+        this.calcSpendExcludeAir = this.calcSpendExcludeAir.bind(this);
     }
 
     public calcAccount: (e: any) => void = (e: any) => {
@@ -37,17 +38,41 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
             message.error('请补全信息');
             return;
         }
+        this.calcSpendExcludeAir();
     };
 
     public errorCheck(): void{
         this.errorNumber = this.errorNumber + 1;
     }
 
+    public calcSpendExcludeAir(): void{
+        const self = this;
+
+        let airSpend: string = '';
+        let airSpendNumber: number = 0;
+        this.props.rooms.forEach((_:object, i:number) => {
+            const spend: number = self[`refs${i}`].current.airConditionerMoney;
+            airSpendNumber = airSpendNumber + spend;
+            if(i === 0){
+                airSpend = `${spend}`;
+            }else{
+                airSpend = `${spend} + ${airSpend}`;
+            }
+        });
+
+        this.props.rooms.forEach((_:object, i:number) => {
+            self[`refs${i}`].current.calcEachArrangeSpend(airSpend, airSpendNumber);
+        });
+    }
+
 
     public render() {
         const key: string = 'name';
+        const key2: string = 'peopleNumber';
+        let allPeople: number = 0;
         this.props.rooms.forEach((_:object, i:number) => {
             this[`refs${i}`] = React.createRef();
+            allPeople = allPeople + _[key2];
         });
 
         return (
@@ -89,33 +114,18 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                         this.props.rooms.map((_: object, i: number) => {
                             return (
                                 <Col className="gutter-row" span={Math.ceil(24 / this.props.rooms.length)} key={i}>
-                                    <ElectricityTemp name={_[key]} ref={this[`refs${i}`]} errorCheck={this.errorCheck}/>
+                                    <ElectricityTemp ref={this[`refs${i}`]}
+                                                     name={_[key]}
+                                                     allPeople={allPeople}
+                                                     allMoeny={this.state.allMoeny}
+                                                     errorCheck={this.errorCheck}
+                                                     peopleNumber={_[key2]}/>
                                 </Col>
                             )
                         })
                     }
                 </Row>
-                <Row gutter={24} style={{margin: '15px 0px'}}>
-                    <Col className="gutter-row" span={6}>
-                       每户平摊费用:
-                    </Col>
-                    <Col className="gutter-row" span={18}>
-                        <div className="gutter-box">
-                            3
-                        </div>
-                    </Col>
-                </Row>
-                <Row gutter={24}>
-                    <Col className="gutter-row" span={6}>
-                        应交:
-                    </Col>
-                    <Col className="gutter-row" span={18}>
-                        <div className="gutter-box">
-                            ..
-                        </div>
-                    </Col>
-                </Row>
-                <Row gutter={24}>
+                <Row gutter={24} style={{marginTop: '8px'}}>
                     <Col className="gutter-row" span={24}>
                         <Button onClick={this.calcAccount}>结算</Button>
                     </Col>

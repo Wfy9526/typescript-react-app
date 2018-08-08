@@ -1,13 +1,16 @@
 {
   "room": [
     {
-      "name": "101"
+      "name": "101",
+      "peopleNumber": 1
     },
     {
-      "name": "102"
+      "name": "102",
+      "peopleNumber": 1
     },
     {
-      "name": "103"
+      "name": "103",
+      "peopleNumber": 2
     }
   ]
 }
