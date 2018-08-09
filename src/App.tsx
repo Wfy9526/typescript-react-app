@@ -30,7 +30,7 @@ class App extends React.Component<any, Istate> {
 
     public render() {
         return (
-                <div className="App">
+                <div className="App" style={{padding: '10px 20px'}}>
                     <Tabs defaultActiveKey="1">
                         <TabPane tab={<span><Icon type="meh-o" />电费</span>} key="1">
                             <ElectricityFees rooms={this.state.rooms}/>

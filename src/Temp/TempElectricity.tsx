@@ -20,7 +20,8 @@ interface Igather {
 }
 
 interface Istate {
-    airSpendDisplay: string
+    airSpendDisplay: string,
+    arrageSpend: string
 }
 
 class ElectricityTemp extends React.Component<Iprops, any> {
@@ -32,11 +33,11 @@ class ElectricityTemp extends React.Component<Iprops, any> {
     };
 
     public airConditionerMoney: number = 0;
-    public arrageSpend: string = '';
     public arrangeSpendNumber: number = 0;
 
     public state: Istate = {
-        airSpendDisplay: ''
+        airSpendDisplay: '',
+        arrageSpend: '',
     };
 
     constructor(props: any) {
@@ -64,10 +65,10 @@ class ElectricityTemp extends React.Component<Iprops, any> {
 
     }
 
-    public calcEachArrangeSpend(airSpend: string, airSpendNumber: number):void {
-        const arrangeSpend: string = `(${this.props.allMoeny} - (${airSpend})) * ${this.props.peopleNumber} / ${this.props.allPeople}`;
-        this.arrangeSpendNumber = (this.props.allMoeny - airSpendNumber) * this.props.peopleNumber / this.props.allPeople;
-        this.arrageSpend = `${arrangeSpend} = ${this.arrangeSpendNumber}`;
+    public calcEachArrangeSpend(airSpend: string, airSpendNumber: number, xValue: number): void {
+        const arrangeSpend: string = `${xValue} * ${this.props.peopleNumber} * ${this.gather.days} `;
+        this.arrangeSpendNumber = xValue  * this.props.peopleNumber * this.gather.days;
+        this.setState({arrageSpend: `${arrangeSpend} = ${this.arrangeSpendNumber}`})
     }
 
     public dateChange(a: any[], timeArr: string[]){
@@ -135,7 +136,7 @@ class ElectricityTemp extends React.Component<Iprops, any> {
                     </Col>
                     <Col className="gutter-row" span={16}>
                         <div className="gutter-box">
-                            {this.arrageSpend}
+                            {this.state.arrageSpend}
                         </div>
                     </Col>
                 </Row>
