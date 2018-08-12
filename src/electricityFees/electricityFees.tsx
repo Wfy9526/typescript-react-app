@@ -71,12 +71,15 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                 airSpend = `${spend} + ${airSpend}`;
             }
         });
+        const xValue: number = Number(((this.allMoeny - this.airSpendNumber) / peopleDyas).toFixed(2));
 
-        this.setState({xValue:  Number(((this.allMoeny - this.airSpendNumber) / peopleDyas).toFixed(2))});
-
-        this.props.rooms.forEach((_:object, i:number) => {
-            self[`refs${i}`].current.calcEachArrangeSpend(airSpend, this.airSpendNumber, this.state.xValue);
+        this.setState({xValue}, () => {
+            this.props.rooms.forEach((_:object, i:number) => {
+                self[`refs${i}`].current.calcEachArrangeSpend(airSpend, self.airSpendNumber, self.state.xValue);
+            });
         });
+
+
     }
 
     public render() {

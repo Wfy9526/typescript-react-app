@@ -73,7 +73,7 @@ class ElectricityTemp extends React.Component<Iprops, any> {
 
     public dateChange(a: any[], timeArr: string[]){
         const times: number = new Date(timeArr[1]).getTime() - new Date(timeArr[0]).getTime();
-        this.gather.days = Math.ceil(times / (24 * 60 * 60 * 1000));
+        this.gather.days = Math.ceil(times / (24 * 60 * 60 * 1000)) || 0;
     }
 
 
