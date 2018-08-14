@@ -1,11 +1,19 @@
 import * as React from 'react';
+import {connect} from 'react-redux';
+
 import {Row, Col, Input, Button, DatePicker, message} from 'antd';
 import ElectricityTemp from '../temp/TempElectricity'
+import * as eventEnum from "../store/eventEnum";
 
 const RangePicker = DatePicker.RangePicker;
 
-
 interface Iprops {
+    rooms: object[],
+    addStoreRoom: (room: object[]) => void
+    deleteStoreRoom: (room: object[]) => void
+}
+
+interface IStore {
     rooms: object[]
 }
 
@@ -32,6 +40,7 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
         this.errorCheck = this.errorCheck.bind(this);
         this.calcSpendExcludeAir = this.calcSpendExcludeAir.bind(this);
         this.changeMoney = this.changeMoney.bind(this);
+        this.addRoom = this.addRoom.bind(this);
     }
 
     public calcAccount: (e: any) => void = (e: any) => {
@@ -82,6 +91,19 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
 
     }
 
+    public addRoom(e: any): void {
+        const room = [{
+            name: e.target.value,
+            peopleNumber: 1
+        }];
+        this.props.addStoreRoom(room);
+    }
+
+    public deleteRoom(name: string, e: any): void {
+        const rooms = this.props.rooms.filter((_: IRoom) => _.name !== name);
+        this.props.deleteStoreRoom(rooms);
+    }
+
     public render() {
         const key: string = 'name';
         const key2: string = 'peopleNumber';
@@ -120,7 +142,7 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                 </Row>
                 <Row gutter={24}>
                     <Col className="gutter-row" span={6}>
-                        <Button>添加一户:</Button>
+                        <Button onClick={this.addRoom}>添加一户:</Button>
                     </Col>
                     <Col className="gutter-row" span={6}>
                         <div className="gutter-box">
@@ -144,6 +166,7 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
                                                      allMoeny={this.allMoeny}
                                                      errorCheck={this.errorCheck}
                                                      peopleNumber={_[key2]}/>
+                                    <Button onClick={this.deleteRoom.bind(this, _[key])}>删除</Button>
                                 </Col>
                             )
                         })
@@ -159,4 +182,18 @@ class ElectricityFees extends React.Component<Iprops, Istate> {
     }
 }
 
-export default ElectricityFees;
+const stateToProps = (store: IStore) => {
+    return {rooms: store.rooms}
+};
+
+const dispatchToProps = (dispatch: any) => {
+    return {
+        addStoreRoom: (data: object[]) => {
+            dispatch({type: eventEnum.ADDROOM, val: data})
+        },
+        deleteStoreRoom: (data: object[]) => {
+            dispatch({type: eventEnum.DELETEROOM, val: data})
+        }
+    }
+};
+export default connect(stateToProps, dispatchToProps)(ElectricityFees);

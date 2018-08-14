@@ -1,1 +1,2 @@
-export const  TEST = 'TEST';
+export const  ADDROOM = 'ADDROOM';
+export const  DELETEROOM = 'DELETEROOM';

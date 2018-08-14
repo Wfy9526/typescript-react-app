@@ -4,13 +4,24 @@ import * as eventEnum from './eventEnum';
 interface Iaction {
     type: string,
     val: any,
-};
+}
 
-const reducer = (state: object = {}, action: Iaction) => {
-    let result: object = {};
+interface IState {
+    rooms: object[]
+}
+
+const storeState = {
+    rooms: []
+}
+
+const reducer = (state: IState = storeState, action: Iaction) => {
+    let result: IState = state;
     switch (action.type){
-        case eventEnum.TEST:
-            result = {val: action.val};
+        case eventEnum.ADDROOM:
+            result = {rooms: [...state.rooms, ...action.val]};
+            break;
+        case eventEnum.DELETEROOM:
+            result = {rooms: action.val};
             break;
     }
     return result;
