@@ -23,6 +23,8 @@ const reducer = (state: IState = storeState, action: Iaction) => {
         case eventEnum.DELETEROOM:
             result = {rooms: action.val};
             break;
+        default:
+            break;
     }
     return result;
 };
